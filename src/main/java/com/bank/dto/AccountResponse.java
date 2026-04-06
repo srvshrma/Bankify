@@ -3,6 +3,8 @@ package com.bank.dto;
 import com.bank.model.AccountType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AccountResponse {
@@ -21,7 +23,7 @@ public class AccountResponse {
         this.accountType = accountType;
         this.balance = balance;
         this.createdAt = createdAt;
-        this.recentTransactions = recentTransactions;
+        this.recentTransactions = Collections.unmodifiableList(new ArrayList<>(recentTransactions));
     }
 
     public Long getId() {

@@ -8,7 +8,6 @@ import com.bank.repository.CustomerRepository;
 import com.bank.util.MapperUtil;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +23,9 @@ public class CustomerService {
     }
 
     public CustomerResponse createCustomer(CustomerRequest request) {
-        Optional<Customer> existingCustomer = customerRepository.findByEmail(request.getEmail());
-        existingCustomer.ifPresent(customer -> {
+        if (customerRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Customer email already exists");
-        });
+        }
 
         Customer customer = new Customer(request.getFullName(), request.getEmail(), LocalDate.now());
         return MapperUtil.toCustomerResponse(customerRepository.save(customer));

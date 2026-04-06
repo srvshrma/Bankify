@@ -1,7 +1,10 @@
 package com.bank.dto;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DashboardResponse {
@@ -17,8 +20,8 @@ public class DashboardResponse {
         this.totalCustomers = totalCustomers;
         this.totalAccounts = totalAccounts;
         this.totalBalance = totalBalance;
-        this.balanceByAccountType = balanceByAccountType;
-        this.alerts = alerts;
+        this.balanceByAccountType = Collections.unmodifiableMap(new LinkedHashMap<>(balanceByAccountType));
+        this.alerts = Collections.unmodifiableList(new ArrayList<>(alerts));
     }
 
     public long getTotalCustomers() {

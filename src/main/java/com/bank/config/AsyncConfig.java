@@ -15,6 +15,8 @@ public class AsyncConfig {
         executor.setMaxPoolSize(8);
         executor.setQueueCapacity(25);
         executor.setThreadNamePrefix("bank-async-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(30);
         executor.initialize();
         return executor;
     }

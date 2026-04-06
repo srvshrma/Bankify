@@ -4,6 +4,7 @@ import com.bank.dto.Java8FeatureResponse;
 import com.bank.model.Account;
 import com.bank.util.InterestCalculator;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,8 +14,8 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class Java8ShowcaseService {
                         .collect(Collectors.joining(", ")),
                 "Method reference customer count: " + accounts.stream()
                         .map(Account::getCustomer)
-                        .map(customer -> customer.getEmail().toLowerCase())
+                        .map(customer -> customer.getEmail().toLowerCase(Locale.ROOT))
                         .distinct()
                         .count()
         );
@@ -60,7 +61,7 @@ public class Java8ShowcaseService {
                         .map(Account::getCustomer)
                         .findFirst()
                         .map(customer -> customer.getEmail())
-                        .orElseGet(() -> "unknown@bank.local"));
+                        .orElse("unknown@bank.local"));
 
         Map<String, Object> streamAnalytics = new LinkedHashMap<>();
         streamAnalytics.put("averageBalance",
@@ -83,7 +84,9 @@ public class Java8ShowcaseService {
         timeApi.put("newYorkTime", newYorkTime.format(DateTimeFormatter.ISO_ZONED_DATE_TIME));
         timeApi.put("hoursBetween", Duration.between(newYorkTime.toLocalDateTime(), indiaTime.toLocalDateTime()).abs().toHours());
 
-        String encodedToken = Base64.getEncoder().encodeToString(("BANK-COMPLIANCE-" + LocalDateTime.now()).getBytes());
+        String encodedToken = Base64.getEncoder().encodeToString(
+                ("BANK-COMPLIANCE-" + LocalDateTime.now()).getBytes(StandardCharsets.UTF_8)
+        );
 
         CompletableFuture<String> highValueAccounts = CompletableFuture.supplyAsync(() ->
                 accounts.stream()
@@ -99,15 +102,18 @@ public class Java8ShowcaseService {
                         .collect(Collectors.joining(", "))
         );
 
+        String highValueAccountNumbers = highValueAccounts.join();
+        String dormantAccountNumbers = dormantCheck.join();
+
         List<String> asyncInsights = Arrays.asList(
-                highValueAccounts.join().isEmpty() ? "No high value accounts" : "High value accounts: " + highValueAccounts.join(),
-                dormantCheck.join().isEmpty() ? "No dormant accounts" : "Dormant/new accounts: " + dormantCheck.join()
+                highValueAccountNumbers.isEmpty() ? "No high value accounts" : "High value accounts: " + highValueAccountNumbers,
+                dormantAccountNumbers.isEmpty() ? "No dormant accounts" : "Dormant/new accounts: " + dormantAccountNumbers
         );
 
         InterestCalculator calculator = InterestCalculator.simpleInterest();
-        BigDecimal sampleBalance = Optional.of(accounts)
-                .filter(list -> !list.isEmpty())
-                .flatMap(list -> list.stream().map(Account::getBalance).findFirst())
+        BigDecimal sampleBalance = accounts.stream()
+                .map(Account::getBalance)
+                .findFirst()
                 .orElse(new BigDecimal("1000"));
 
         return new Java8FeatureResponse(

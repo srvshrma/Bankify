@@ -1,6 +1,8 @@
 package com.bank.exception;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ApiError {
@@ -11,7 +13,7 @@ public class ApiError {
 
     public ApiError(String message, List<String> details, LocalDateTime timestamp) {
         this.message = message;
-        this.details = details;
+        this.details = Collections.unmodifiableList(new ArrayList<>(details));
         this.timestamp = timestamp;
     }
 

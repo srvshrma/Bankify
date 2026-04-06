@@ -1,5 +1,8 @@
 package com.bank.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +22,12 @@ public class Java8FeatureResponse {
                                 String encodedComplianceToken, List<String> asyncInsights,
                                 String defaultMethodComputation) {
         this.generatedAt = generatedAt;
-        this.lambdas = lambdas;
-        this.optionalResults = optionalResults;
-        this.streamAnalytics = streamAnalytics;
-        this.timeApi = timeApi;
+        this.lambdas = Collections.unmodifiableList(new ArrayList<>(lambdas));
+        this.optionalResults = Collections.unmodifiableMap(new LinkedHashMap<>(optionalResults));
+        this.streamAnalytics = Collections.unmodifiableMap(new LinkedHashMap<>(streamAnalytics));
+        this.timeApi = Collections.unmodifiableMap(new LinkedHashMap<>(timeApi));
         this.encodedComplianceToken = encodedComplianceToken;
-        this.asyncInsights = asyncInsights;
+        this.asyncInsights = Collections.unmodifiableList(new ArrayList<>(asyncInsights));
         this.defaultMethodComputation = defaultMethodComputation;
     }
 

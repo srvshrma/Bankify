@@ -1,6 +1,8 @@
 package com.bank.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CustomerResponse {
@@ -16,7 +18,7 @@ public class CustomerResponse {
         this.fullName = fullName;
         this.email = email;
         this.joinedOn = joinedOn;
-        this.accounts = accounts;
+        this.accounts = Collections.unmodifiableList(new ArrayList<>(accounts));
     }
 
     public Long getId() {

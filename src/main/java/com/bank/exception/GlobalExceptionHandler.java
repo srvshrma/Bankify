@@ -1,7 +1,7 @@
 package com.bank.exception;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
@@ -17,13 +17,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ApiError(ex.getMessage(), Arrays.asList("Requested resource does not exist"), LocalDateTime.now()));
+                .body(new ApiError(ex.getMessage(), Collections.singletonList("Requested resource does not exist"), LocalDateTime.now()));
     }
 
     @ExceptionHandler(InsufficientFundsException.class)
     public ResponseEntity<ApiError> handleInsufficientFunds(InsufficientFundsException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiError(ex.getMessage(), Arrays.asList("Balance is lower than requested transfer amount"), LocalDateTime.now()));
+                .body(new ApiError(ex.getMessage(), Collections.singletonList("Balance is lower than requested transfer amount"), LocalDateTime.now()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,6 +41,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.badRequest()
-                .body(new ApiError(ex.getMessage(), Arrays.asList("Request cannot be processed"), LocalDateTime.now()));
+                .body(new ApiError(ex.getMessage(), Collections.singletonList("Request cannot be processed"), LocalDateTime.now()));
     }
 }

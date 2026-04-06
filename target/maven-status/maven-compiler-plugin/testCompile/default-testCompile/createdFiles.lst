@@ -1,1 +1,5 @@
 com/bank/BankingApplicationTests.class
+com/bank/BankingFlowIntegrationTest.class
+com/bank/service/CustomerServiceTest.class
+com/bank/service/TransferServiceTest.class
+com/bank/service/AccountServiceTest.class
